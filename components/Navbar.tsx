@@ -6,7 +6,7 @@ import { signOut } from 'firebase/auth'
 
 const Navbar:FC = () => {
   const { user, setUser } = useAuth();
-  
+
   const logoutUser = () => {
     setUser(null)
     signOut(auth);
