@@ -4,24 +4,24 @@ import useAuth from '../hooks/useAuth'
 import { auth } from '../firebase'
 import { signOut } from 'firebase/auth'
 
-const Navbar:FC = () => {
+const Navbar: FC = () => {
   const { user, setUser } = useAuth();
-  
+
   const logoutUser = () => {
     setUser(null)
-    signOut(auth);
+    signOut(auth)
   }
 
   return (
     <nav className='flex justify-between p-2 border-b-2 border-solid border-gray-300'>
       <h1 className='ml-2 text-3xl custom-font font-bold'>Fool Social</h1>
       <div className='font-bold  flex text-3xl justify-center'>
-      {user ? (
-        <>
-        <Avatar alt={user.name?.toString()} srcSet={user.photo?.toString()} className='mr-2' />
-          {`${user.name}`}
-        </>
-      ) : ""}
+        {user ? (
+          <>
+            <Avatar alt={user.name?.toString()} srcSet={user.photo?.toString()} className='mr-2' />
+            {`${user.name}`}
+          </>
+        ) : ""}
       </div>
       <div className='flex justify-end'>
         <button
@@ -33,7 +33,7 @@ const Navbar:FC = () => {
       </div>
 
       <style jsx>
-      {`
+        {`
         @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
         .custom-font {
           font-family: 'Lobster', cursive;

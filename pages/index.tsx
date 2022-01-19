@@ -21,11 +21,14 @@ const Home: NextPage = () => {
       img: string;
     }[]
   >([]);
+  const [title, setTitle] = useState<string>('Home')
 
   useEffect(() => {
     if (!user) {
-      router.push('/login')
+      router.replace('/login')
+      setTitle('Login')
     }
+
     fetch('/api/posts/all', { method: 'GET' })
       .then(async (res) => await res.json())
       .then((data) => setPosts(data))
@@ -74,7 +77,7 @@ const Home: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Home</title>
+        <title>{title}</title>
       </Head>
       {user ? (
         <div>
@@ -85,10 +88,16 @@ const Home: NextPage = () => {
             </div>
             <CreatePostForm handler={createPost} handlerWithImg={createPostWithImg} />
           </div>
-          {posts instanceof Array && posts.map(post => (
-            <Post key={post._id} _id={post._id} name={post.name} body={post.body} img={post.img} />
-          ))
-          }
+          {posts.length === 0 ? (
+            <div className='flex justify-center mt-10'>
+              <h1 className='text-3xl font-bold'>Loading...</h1>
+            </div>
+          ) : (
+            posts instanceof Array && posts.map(post => (
+              <Post key={post._id} _id={post._id} name={post.name} body={post.body} img={post.img} />
+            ))
+          )}
+
         </div>
       ) : ''}
     </div>
