@@ -16,14 +16,14 @@ const Post: FC<PostProps> = (props: PostProps) => {
       <p className='mt-1'>{props.body}</p>
       <div className='flex justify-center'>
         {props.img !== "" && (
-          <Image 
+          <Image
             src={props.img}
             alt={`${props.name}`}
             width={500}
             height={500}
             className='text-center'
           />
-      )}
+        )}
       </div>
     </div>
   )

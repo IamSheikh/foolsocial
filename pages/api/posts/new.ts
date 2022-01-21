@@ -13,6 +13,7 @@ export default async function handler(
       const newPost = new Post({
         name: req.body.name,
         body: req.body.body,
+        comments: []
       })
       await newPost.save();
       res.status(200).json(newPost)
