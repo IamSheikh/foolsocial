@@ -16,12 +16,14 @@
     "next": "12.0.8",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-file-base64": "^1.0.3"
+    "react-file-base64": "^1.0.3",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/mongoose": "^5.11.97",
     "@types/node": "17.0.8",
     "@types/react": "17.0.38",
+    "@types/uuid": "^8.3.4",
     "autoprefixer": "^10.4.2",
     "eslint": "8.7.0",
     "eslint-config-next": "12.0.8",

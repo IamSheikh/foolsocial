@@ -2,22 +2,55 @@ import type { GetStaticProps, NextPage } from 'next'
 import Head from 'next/head'
 import Navbar from '../../components/Navbar'
 import AddCommentForm from '../../components/AddCommentForm'
+import Comment from '../../components/Comment'
 import dbConnect from '../../lib/mongo'
 import Post from '../../models/Post'
 import Image from 'next/image'
+import useAuth from '../../hooks/useAuth'
+import { useState } from 'react'
 
 interface Props {
   post: {
-    name: string;
-    body: string;
-    img: string;
-    comments: any[]
+    _id: string
+    name: string
+    body: string
+    img: string
+    comments: [
+      { _id: string; name: string; comment: string; userImage: string }
+    ]
   }
 }
 
 const PostById: NextPage<Props> = (props: Props) => {
-  const addComment = (comment: string) => {
+  const { user } = useAuth()
+  const [message, setMessage] = useState('')
+  const addComment = (comment: string, setComment: Function) => {
+    if (user) {
+      const userComment = {
+        name: user.name,
+        comment,
+        img: user.photo,
+        postId: props.post._id,
+      }
+      fetch('/api/posts/add-comment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userComment),
+      })
+        .then(async () => {
+          setComment('')
+          setMessage('Comment Posted! Refresh to see the comment')
 
+          setTimeout(() => {
+            setMessage('')
+          }, 10000)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
   }
   return (
     <div>
@@ -29,7 +62,7 @@ const PostById: NextPage<Props> = (props: Props) => {
         <h1 className='text-3xl font-semibold'>{props.post.name}</h1>
         <p>{props.post.body}</p>
         <div className='flex justify-center'>
-          {props.post.img !== "" && (
+          {props.post.img !== '' && (
             <>
               <Image
                 src={props.post.img}
@@ -42,7 +75,11 @@ const PostById: NextPage<Props> = (props: Props) => {
         </div>
         <div className='flex items-center flex-col mt-10'>
           <h1 className='text-3xl font-semibold'>Comments</h1>
+          {message !== '' && <h3>{message}</h3>}
           <AddCommentForm handler={addComment} />
+          {props.post.comments.map((comment) => (
+            <Comment key={comment._id} comment={comment} />
+          ))}
         </div>
       </div>
     </div>
@@ -62,12 +99,12 @@ export const getStaticPaths = async () => {
 
   return {
     paths: posts,
-    fallback: false
+    fallback: false,
   }
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  await dbConnect();
+  await dbConnect()
 
   const post = await Post.findById(context.params?.id).lean()
 
@@ -78,11 +115,10 @@ export const getStaticProps: GetStaticProps = async (context) => {
         name: post.name.toString(),
         body: post.body.toString(),
         img: post.img.toString(),
-        // @ts-ignore
-        comments: post?.comments
-      }
+        comments: post.comments,
+      },
     },
-    revalidate: 2
+    revalidate: 1,
   }
 }
 

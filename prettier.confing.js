@@ -1,7 +1,7 @@
 const options = {
   singleQuote: true,
   jsxSingleQuote: true,
-  semi: true
+  semi: false
 }
 
 module.exports = options
