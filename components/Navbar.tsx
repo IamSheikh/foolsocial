@@ -3,6 +3,7 @@ import Avatar from '@mui/material/Avatar'
 import useAuth from '../hooks/useAuth'
 import { auth } from '../firebase'
 import { signOut } from 'firebase/auth'
+import Link from 'next/link'
 
 const Navbar: FC = () => {
   const { user, setUser } = useAuth()
@@ -14,7 +15,11 @@ const Navbar: FC = () => {
 
   return (
     <nav className='flex justify-between p-2 border-b-2 border-solid border-gray-300'>
-      <h1 className='ml-2 text-3xl custom-font font-bold'>Fool Social</h1>
+      <Link href='/'>
+        <h1 className='ml-2 cursor-pointer text-3xl custom-font font-bold'>
+          Fool Social
+        </h1>
+      </Link>
       <div className='font-bold  flex text-3xl justify-center'>
         {user ? (
           <>

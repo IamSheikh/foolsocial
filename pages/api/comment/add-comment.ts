@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import dbConnect from '../../../lib/mongo'
-import Post from '../../../models/Post'
+import Comment from '../../../models/Comment'
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,12 +9,14 @@ export default async function handler(
   await dbConnect()
   if (req.method === 'POST') {
     try {
-      const newPost = new Post({
+      const newComment = new Comment({
         name: req.body.name,
-        body: req.body.body,
+        postId: req.body.postId,
+        img: req.body.img,
+        comment: req.body.comment,
       })
-      await newPost.save()
-      res.status(200).json(newPost)
+      await newComment.save()
+      res.status(200).json(newComment)
     } catch (err: any) {
       res.json(err.message)
     }

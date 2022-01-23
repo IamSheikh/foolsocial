@@ -3,9 +3,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
-import Link from 'next/link'
 
-import Navbar from '../components/Navbar'
 import CreatePostForm from '../components/CreatePostForm'
 import Post from '../components/Post'
 
@@ -91,7 +89,6 @@ const Home: NextPage = () => {
       </Head>
       {user ? (
         <div>
-          <Navbar />
           <div className='flex flex-col justify-center'>
             <div>
               <h1 className='text-3xl text-center font-semibold mt-5'>
