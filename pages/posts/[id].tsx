@@ -125,7 +125,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         img: post.img.toString(),
       },
     },
-    revalidate: 1,
+    revalidate: 10,
   }
 }
 
