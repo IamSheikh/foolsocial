@@ -107,7 +107,7 @@ export const getStaticPaths = async () => {
 
   return {
     paths: posts,
-    fallback: true,
+    fallback: 'blocking',
   };
 };
 
