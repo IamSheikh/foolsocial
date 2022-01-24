@@ -86,6 +86,12 @@ const Home: NextPage = () => {
     <div>
       <Head>
         <title>{title}</title>
+        <meta name='description' content='Home | FoolSocial' />
+        <meta name='og:title' content={title} />
+        <meta
+          name='keywords'
+          content='foolsocial, FoolSocial, Fool Social, social media, app'
+        />
       </Head>
       {user ? (
         <div>
