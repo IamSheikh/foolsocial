@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react'
 const Login: NextPage = () => {
   const googleProvider = new GoogleAuthProvider()
   const facebookProvider = new FacebookAuthProvider()
+  const [error, setError] = useState<boolean>(false)
   const { user, setUser } = useAuth()
   const router = useRouter()
   const [title, setTitle] = useState<string>('Login')
@@ -34,6 +35,7 @@ const Login: NextPage = () => {
           email: res.user.email,
           photo: res.user.photoURL,
         })
+        setError(false)
       })
       .catch((err) => {
         alert(err)
@@ -47,9 +49,17 @@ const Login: NextPage = () => {
           email: res.user.email,
           photo: res.user.photoURL,
         })
+        setError(false)
       })
       .catch((err) => {
-        alert(err)
+        if (
+          err ==
+          'FirebaseError: Firebase: Error (auth/account-exists-with-different-credential).'
+        ) {
+          setError(true)
+        } else {
+          alert(err)
+        }
       })
   }
   return (
@@ -59,18 +69,32 @@ const Login: NextPage = () => {
       </Head>
       <div className='flex justify-center items-center h-screen flex-col'>
         <h1 className='text-3xl font-semibold'>Login</h1>
-        <button
-          onClick={loginWithGoogle}
-          className='bg-red-500 text-white px-4 py-2 rounded duration-200 transition-transform ease-in-out hover:scale-105 mt-2'
-        >
-          Login with Google
-        </button>
-        <button
-          onClick={loginWithFacebook}
-          className='bg-blue-500 text-white px-4 py-2 rounded duration-200 transition-transform ease-in-out hover:scale-105 mt-2'
-        >
-          Login With Facebook
-        </button>
+        {!error ? (
+          <>
+            <button
+              onClick={loginWithGoogle}
+              className='bg-red-500 text-white px-4 py-2 rounded duration-200 transition-transform ease-in-out hover:scale-105 mt-2'
+            >
+              Login with Google
+            </button>
+            <button
+              onClick={loginWithFacebook}
+              className='bg-blue-500 text-white px-4 py-2 rounded duration-200 transition-transform ease-in-out hover:scale-105 mt-2'
+            >
+              Login With Facebook
+            </button>
+          </>
+        ) : (
+          <>
+            <h1 className='text-2xl'>Opps Something went wrong</h1>
+            <button
+              onClick={loginWithGoogle}
+              className='bg-red-500 text-white px-4 py-2 rounded duration-200 transition-transform ease-in-out hover:scale-105 mt-2'
+            >
+              Login with Google
+            </button>
+          </>
+        )}
       </div>
     </div>
   )
