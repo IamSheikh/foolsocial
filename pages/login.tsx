@@ -1,16 +1,21 @@
 import type { NextPage } from 'next'
-import Head from 'next/head';
-import { auth } from '../firebase';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import Head from 'next/head'
+import { auth } from '../firebase'
+import {
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth'
 import useAuth from '../hooks/useAuth'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 const Login: NextPage = () => {
-  const provider = new GoogleAuthProvider();
-  const { user, setUser } = useAuth();
-  const router = useRouter();
-  const [title, setTitle] = useState<string>('Login');
+  const googleProvider = new GoogleAuthProvider()
+  const facebookProvider = new FacebookAuthProvider()
+  const { user, setUser } = useAuth()
+  const router = useRouter()
+  const [title, setTitle] = useState<string>('Login')
 
   useEffect(() => {
     if (user) {
@@ -21,16 +26,31 @@ const Login: NextPage = () => {
     }
   }, [user, router])
 
-  const loginUser = () => {
-    signInWithPopup(auth, provider).then(res => {
-      setUser({
-        name: res.user.displayName,
-        email: res.user.email,
-        photo: res.user.photoURL
+  const loginWithGoogle = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((res) => {
+        setUser({
+          name: res.user.displayName,
+          email: res.user.email,
+          photo: res.user.photoURL,
+        })
       })
-    }).catch(err => {
-      alert(err)
-    })
+      .catch((err) => {
+        alert(err)
+      })
+  }
+  const loginWithFacebook = () => {
+    signInWithPopup(auth, facebookProvider)
+      .then((res) => {
+        setUser({
+          name: res.user.displayName,
+          email: res.user.email,
+          photo: res.user.photoURL,
+        })
+      })
+      .catch((err) => {
+        alert(err)
+      })
   }
   return (
     <div>
@@ -39,12 +59,21 @@ const Login: NextPage = () => {
       </Head>
       <div className='flex justify-center items-center h-screen flex-col'>
         <h1 className='text-3xl font-semibold'>Login</h1>
-        <button onClick={loginUser} className='bg-teal-500 text-white px-4 py-2 rounded duration-1000 hover:bg-white hover:text-teal-500 mt-2'>
+        <button
+          onClick={loginWithGoogle}
+          className='bg-red-500 text-white px-4 py-2 rounded duration-200 transition-transform ease-in-out hover:scale-105 mt-2'
+        >
           Login with Google
+        </button>
+        <button
+          onClick={loginWithFacebook}
+          className='bg-blue-500 text-white px-4 py-2 rounded duration-200 transition-transform ease-in-out hover:scale-105 mt-2'
+        >
+          Login With Facebook
         </button>
       </div>
     </div>
   )
 }
 
-export default Login;
+export default Login
