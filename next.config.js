@@ -6,8 +6,6 @@ const nextConfig = withPwa({
   pwa: {
     dest: 'public',
     register: true,
-    scope: '/',
-    sw: 'service-worker.js',
   },
 })
 
