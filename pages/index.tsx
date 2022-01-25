@@ -86,6 +86,7 @@ const Home: NextPage = () => {
     <div>
       <Head>
         <title>{title}</title>
+        <link rel='icon' href='/logo.png' />
       </Head>
       {user ? (
         <div>

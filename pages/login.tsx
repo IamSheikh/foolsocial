@@ -66,6 +66,7 @@ const Login: NextPage = () => {
     <div>
       <Head>
         <title>{title}</title>
+        <link rel='icon' href='/logo.png' />
       </Head>
       <div className='flex justify-center items-center h-screen flex-col'>
         <h1 className='text-3xl font-semibold'>Login</h1>
