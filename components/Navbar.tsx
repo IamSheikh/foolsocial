@@ -4,13 +4,16 @@ import useAuth from '../hooks/useAuth'
 import { auth } from '../firebase'
 import { signOut } from 'firebase/auth'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const Navbar: FC = () => {
   const { user, setUser } = useAuth()
+  const router = useRouter()
 
   const logoutUser = () => {
     setUser(null)
     signOut(auth)
+    router.replace('/login')
   }
 
   return (
