@@ -3,36 +3,46 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
+import { GetServerSideProps } from 'next'
+import dbConnect from '../lib/mongo'
+import PostModel from '../models/Post'
 
 import CreatePostForm from '../components/CreatePostForm'
 import Post from '../components/Post'
 
-const Home: NextPage = () => {
+interface Props {
+  posts: string
+}
+
+const Home: NextPage<Props> = ({ posts }) => {
   const { user } = useAuth()
   const router = useRouter()
-  const [posts, setPosts] = useState<
-    | []
-    | {
-        _id: string
-        name: string
-        username: string
-        body: string
-        img: string
-      }[]
-  >([])
   const [title, setTitle] = useState<string>('Home')
+
+  let allPosts:
+    | []
+    | [
+        {
+          _id: string
+          name: string
+          username: string
+          body: string
+          img: string
+        }
+      ] = JSON.parse(posts)
+
+  const refreshData = () => {
+    router.replace(router.asPath)
+  }
 
   useEffect(() => {
     if (!user) {
       router.replace('/login')
       setTitle('Login')
+    } else {
+      refreshData()
     }
-
-    fetch('/api/posts/all', { method: 'GET' })
-      .then(async (res) => await res.json())
-      .then((data) => setPosts(data))
-      .catch((err) => console.log(err))
-  }, [user, router, posts])
+  }, [user, allPosts])
 
   const createPost = (body: string, formRef: any, setBody: Function) => {
     user &&
@@ -101,28 +111,38 @@ const Home: NextPage = () => {
               handlerWithImg={createPostWithImg}
             />
           </div>
-          {posts.length === 0 ? (
-            <div className='flex justify-center mt-10'>
-              <h1 className='text-3xl font-bold'>Loading...</h1>
-            </div>
-          ) : (
-            posts instanceof Array &&
-            posts.map((post) => (
-              <Post
-                key={post._id}
-                _id={post._id}
-                name={post.name}
-                body={post.body}
-                img={post.img}
-              />
-            ))
-          )}
+          {allPosts.map((post) => (
+            <Post
+              key={post._id}
+              name={post.name}
+              body={post.body}
+              img={post.img}
+              _id={post._id}
+            />
+          ))}
         </div>
       ) : (
         ''
       )}
     </div>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  await dbConnect()
+
+  const result = await PostModel.find({}).sort({ createdAt: -1 })
+  const posts = result.map((doc) => {
+    const post = doc.toObject()
+    post._id = post._id.toString()
+    return post
+  })
+
+  return {
+    props: {
+      posts: JSON.stringify(posts),
+    },
+  }
 }
 
 export default Home
