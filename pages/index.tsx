@@ -6,43 +6,27 @@ import useAuth from '../hooks/useAuth'
 import { GetServerSideProps } from 'next'
 import dbConnect from '../lib/mongo'
 import PostModel from '../models/Post'
+import useSwr from 'swr'
 
 import CreatePostForm from '../components/CreatePostForm'
 import Post from '../components/Post'
 
-interface Props {
-  posts: string
-}
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-const Home: NextPage<Props> = ({ posts }) => {
+const Home: NextPage = () => {
   const { user } = useAuth()
   const router = useRouter()
   const [title, setTitle] = useState<string>('Home')
-
-  let allPosts:
-    | []
-    | [
-        {
-          _id: string
-          name: string
-          username: string
-          body: string
-          img: string
-        }
-      ] = JSON.parse(posts)
-
-  const refreshData = () => {
-    router.replace(router.asPath)
-  }
+  const { data, error } = useSwr('/api/posts/all', fetcher, {
+    refreshInterval: 10,
+  })
 
   useEffect(() => {
     if (!user) {
       router.replace('/login')
       setTitle('Login')
-    } else {
-      refreshData()
     }
-  }, [user, allPosts])
+  }, [user, router])
 
   const createPost = (body: string, formRef: any, setBody: Function) => {
     user &&
@@ -111,7 +95,7 @@ const Home: NextPage<Props> = ({ posts }) => {
               handlerWithImg={createPostWithImg}
             />
           </div>
-          {allPosts.map((post) => (
+          {data?.map((post: any) => (
             <Post
               key={post._id}
               name={post.name}
@@ -126,23 +110,6 @@ const Home: NextPage<Props> = ({ posts }) => {
       )}
     </div>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  await dbConnect()
-
-  const result = await PostModel.find({}).sort({ createdAt: -1 })
-  const posts = result.map((doc) => {
-    const post = doc.toObject()
-    post._id = post._id.toString()
-    return post
-  })
-
-  return {
-    props: {
-      posts: JSON.stringify(posts),
-    },
-  }
 }
 
 export default Home
