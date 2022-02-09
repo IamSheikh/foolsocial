@@ -7,10 +7,9 @@ import Navbar from '../components/Navbar'
 import { useState } from 'react'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<any>(null)
   onAuthStateChanged(auth, (loggedInUser) => {
     if (loggedInUser) {
-      // @ts-ignore
       setUser(loggedInUser)
     } else {
       setUser(null)
