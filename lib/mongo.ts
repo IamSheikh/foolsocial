@@ -21,7 +21,6 @@ if (!MONGO_URI) {
  * during API Route usage.
  */
 
-//@ts-ignore
 let cached = global.mongoose
 
 if (!cached) {
