@@ -1,5 +1,12 @@
 import mongoose from 'mongoose'
 
+declare namespace global {
+  var mongoose: any
+}
+declare namespace process {
+  var env: { MONGO_URI: string }
+}
+
 const MONGO_URI = process.env.MONGO_URI
 
 if (!MONGO_URI) {

@@ -15,7 +15,7 @@ const Post: FC<PostProps> = (props: PostProps) => {
     <div className='border-gray-400 border-solid border-2 my-4 mx-10 rounded p-2'>
       <h1 className='text-2xl font-medium'>{props.name}</h1>
       <p className='mt-1'>{props.body}</p>
-      <div className='flex justify-center'>
+      <div className='flex justify-center mb-4'>
         {props.img !== '' && (
           <Image
             src={props.img}
