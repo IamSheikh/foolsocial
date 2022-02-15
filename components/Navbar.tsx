@@ -18,7 +18,7 @@ const Navbar: FC = () => {
 
   return (
     <nav className='flex justify-between p-2 border-b-2 border-solid border-gray-300'>
-      <Link href='/'>
+      <Link href='/' passHref>
         <h1 className='ml-2 cursor-pointer text-3xl custom-font font-bold'>
           Fool Social
         </h1>
