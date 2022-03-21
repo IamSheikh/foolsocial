@@ -18,7 +18,7 @@ const Home: NextPage = () => {
   const router = useRouter()
   const [title, setTitle] = useState<string>('Home')
   const { data, error } = useSwr('/api/posts/all', fetcher, {
-    refreshInterval: 10,
+    loadingTimeout: 1,
   })
 
   useEffect(() => {

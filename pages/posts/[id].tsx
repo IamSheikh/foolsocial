@@ -7,6 +7,8 @@ import Post from '../../models/Post'
 import Image from 'next/image'
 import useAuth from '../../hooks/useAuth'
 import { useEffect, useState } from 'react'
+import useSWR from 'swr'
+import { useRouter } from 'next/router'
 
 interface Props {
   post: {
@@ -17,10 +19,17 @@ interface Props {
   }
 }
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
+
 const PostById: NextPage<Props> = (props: Props) => {
   const { user } = useAuth()
   const [message, setMessage] = useState('')
   const [comments, setComments] = useState([])
+  const router = useRouter()
+  const { data, error } = useSWR(`/api/comment/${router.query.id}`, fetcher, {
+    loadingTimeout: 1,
+  })
+  console.log(data)
   const addComment = (comment: string, setComment: Function) => {
     if (user) {
       const userComment = {
@@ -38,22 +47,12 @@ const PostById: NextPage<Props> = (props: Props) => {
       })
         .then(async () => {
           setComment('')
-          setMessage('Comment Posted! Refresh to see the comment')
-
-          setTimeout(() => {
-            setMessage('')
-          }, 10000)
         })
         .catch((err) => {
           console.log(err)
         })
     }
   }
-  useEffect(() => {
-    fetch(`/api/comment/${props.post._id}`)
-      .then(async (res) => await res.json())
-      .then((data) => setComments(data))
-  }, [])
   return (
     <div>
       <Head>
@@ -77,10 +76,9 @@ const PostById: NextPage<Props> = (props: Props) => {
         </div>
         <div className='flex items-center flex-col mt-10'>
           <h1 className='text-3xl font-semibold'>Comments</h1>
-          {message !== '' && <h3>{message}</h3>}
           <AddCommentForm handler={addComment} />
           {comments instanceof Array &&
-            comments.map(
+            data?.map(
               (comment: {
                 name: string
                 postId: string
