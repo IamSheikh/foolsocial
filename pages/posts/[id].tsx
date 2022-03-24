@@ -26,9 +26,7 @@ const PostById: NextPage<Props> = (props: Props) => {
   const [message, setMessage] = useState('')
   const [comments, setComments] = useState([])
   const router = useRouter()
-  const { data, error } = useSWR(`/api/comment/${router.query.id}`, fetcher, {
-    loadingTimeout: 1,
-  })
+  const { data, error } = useSWR(`/api/comment/${router.query.id}`, fetcher)
   console.log(data)
   const addComment = (comment: string, setComment: Function) => {
     if (user) {
