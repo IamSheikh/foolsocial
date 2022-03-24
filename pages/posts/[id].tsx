@@ -7,7 +7,7 @@ import Post from '../../models/Post'
 import Image from 'next/image'
 import useAuth from '../../hooks/useAuth'
 import { useEffect, useState } from 'react'
-import useSWR from 'swr'
+import useSWR, { useSWRConfig } from 'swr'
 import { useRouter } from 'next/router'
 
 interface Props {
@@ -27,6 +27,7 @@ const PostById: NextPage<Props> = (props: Props) => {
   const [comments, setComments] = useState([])
   const router = useRouter()
   const { data, error } = useSWR(`/api/comment/${router.query.id}`, fetcher)
+  const { mutate } = useSWRConfig()
   console.log(data)
   const addComment = (comment: string, setComment: Function) => {
     if (user) {
@@ -45,6 +46,7 @@ const PostById: NextPage<Props> = (props: Props) => {
       })
         .then(async () => {
           setComment('')
+          mutate(`/api/comment/${router.query.id}`)
         })
         .catch((err) => {
           console.log(err)

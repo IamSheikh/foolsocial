@@ -6,7 +6,7 @@ import useAuth from '../hooks/useAuth'
 import { GetServerSideProps } from 'next'
 import dbConnect from '../lib/mongo'
 import PostModel from '../models/Post'
-import useSwr from 'swr'
+import useSwr, { useSWRConfig } from 'swr'
 
 import CreatePostForm from '../components/CreatePostForm'
 import Post from '../components/Post'
@@ -18,6 +18,7 @@ const Home: NextPage = () => {
   const router = useRouter()
   const [title, setTitle] = useState<string>('Home')
   const { data, error } = useSwr('/api/posts/all', fetcher)
+  const { mutate } = useSWRConfig()
 
   useEffect(() => {
     if (!user) {
@@ -41,6 +42,7 @@ const Home: NextPage = () => {
         .then(() => {
           formRef.current.reset()
           setBody('')
+          mutate('/api/posts/all')
         })
         .catch((err) => {
           console.log(err)
