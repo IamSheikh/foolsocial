@@ -1,6 +1,17 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 
+declare namespace process {
+  var env: {
+    NEXT_PUBLIC_API_KEY: string
+    NEXT_PUBLIC_AUTH_DOMAIN: string
+    NEXT_PUBLIC_PROJECT_ID: string
+    NEXT_PUBLIC_STORAGE_BUCKET: string
+    NEXT_PUBLIC_MESSAGINGSENDERID: string
+    NEXT_PUBLIC_APP_ID: string
+  }
+}
+
 const firebaseConfig: {
   apiKey: string
   authDomain: string
@@ -9,12 +20,12 @@ const firebaseConfig: {
   messagingSenderId: string
   appId: string
 } = {
-  apiKey: 'AIzaSyApSEe5xD1g1TyxC04eN20640U__WxN8FM',
-  authDomain: 'foolsocial-eeaeb.firebaseapp.com',
-  projectId: 'foolsocial-eeaeb',
-  storageBucket: 'foolsocial-eeaeb.appspot.com',
-  messagingSenderId: '552485896919',
-  appId: '1:552485896919:web:981712ecb8c5bebe192692',
+  apiKey: process.env.NEXT_PUBLIC_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGINGSENDERID,
+  appId: process.env.NEXT_PUBLIC_APP_ID,
 }
 
 const app = initializeApp(firebaseConfig)
