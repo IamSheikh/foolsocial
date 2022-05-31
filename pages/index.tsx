@@ -25,6 +25,7 @@ const Home: NextPage = () => {
       router.replace('/login')
       setTitle('Login')
     }
+    console.log(user?.userId)
   }, [user, router])
 
   const createPost = (body: string, formRef: any, setBody: Function) => {
@@ -37,6 +38,7 @@ const Home: NextPage = () => {
         body: JSON.stringify({
           name: user.name,
           body: body,
+          userId: user.userId,
         }),
       })
         .then(() => {
@@ -95,15 +97,21 @@ const Home: NextPage = () => {
               handlerWithImg={createPostWithImg}
             />
           </div>
-          {data?.map((post: any) => (
-            <Post
-              key={post._id}
-              name={post.name}
-              body={post.body}
-              img={post.img}
-              _id={post._id}
-            />
-          ))}
+          {data?.length === 0 ? (
+            <div className='text-center mt-2'>
+              <h1 className='text-3xl font-semibold'>No posts</h1>
+            </div>
+          ) : (
+            data?.map((post: any) => (
+              <Post
+                key={post._id}
+                name={post.name}
+                body={post.body}
+                img={post.img}
+                _id={post._id}
+              />
+            ))
+          )}
         </div>
       ) : (
         ''

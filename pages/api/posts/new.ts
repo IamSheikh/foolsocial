@@ -12,6 +12,7 @@ export default async function handler(
       const newPost = new Post({
         name: req.body.name,
         body: req.body.body,
+        userId: req.body.userId,
       })
       await newPost.save()
       res.status(200).json(newPost)

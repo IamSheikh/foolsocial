@@ -34,6 +34,7 @@ const Login: NextPage = () => {
           name: res.user.displayName,
           email: res.user.email,
           photo: res.user.photoURL,
+          userId: res.user.uid,
         })
         setError(false)
       })
@@ -48,6 +49,7 @@ const Login: NextPage = () => {
           name: res.user.displayName,
           email: res.user.email,
           photo: res.user.photoURL,
+          userId: res.user.uid,
         })
         setError(false)
       })

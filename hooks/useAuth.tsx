@@ -3,44 +3,47 @@ import {
   useState,
   useContext,
   ReactNode,
-  useEffect
-} from 'react';
+  useEffect,
+} from 'react'
 import { auth } from '../firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 
 interface AuthContextInterface {
   user: null | {
-    name: null | string;
-    email: null | string;
-    photo: null | string;
-  };
+    name: null | string
+    email: null | string
+    photo: null | string
+    userId: null | string
+  }
   setUser: any
 }
 
 const AuthContext = createContext<AuthContextInterface>({
   user: null,
-  setUser: () => {}
-});
+  setUser: () => {},
+})
 
 interface AuthProviderProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 export const AuthProvider = (props: AuthProviderProps) => {
   const [user, setUser] = useState<null | {
-    name: null | string;
-    email: null | string;
-    photo: null | string;
-  }>(null);
+    name: null | string
+    email: null | string
+    photo: null | string
+    userId: null | string
+  }>(null)
 
   useEffect(() => {
-    onAuthStateChanged(auth, user => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser({
           name: user.displayName,
           email: user.email,
-          photo: user.photoURL
-        });
+          photo: user.photoURL,
+          userId: user.uid,
+        })
       } else {
         setUser(null)
       }
@@ -51,11 +54,11 @@ export const AuthProvider = (props: AuthProviderProps) => {
     <AuthContext.Provider value={{ user, setUser }}>
       {props.children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
 
 const useAuth = () => {
-  return useContext(AuthContext);
-};
+  return useContext(AuthContext)
+}
 
-export default useAuth;
+export default useAuth
